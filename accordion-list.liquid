@@ -1,0 +1,159 @@
+<div class="accordion-container">      
+  <h1 style="text-align: center;">{{ section.settings.heading }}</h1>
+  <div class="acc-row">
+    {% for block in section.blocks %}
+      <button class="accordion">{{ block.settings.questions}}</button>
+      <div class="acc-panel"><p style="text-align: left;">{{ block.settings.answers}}</p></div>
+    {% endfor %}
+  </div>
+</div>
+
+<script>
+  var acc = document.getElementsByClassName("accordion");
+  var i;
+
+  for (i = 0; i < acc.length; i++) {
+    acc[i].addEventListener("click", function() {
+      this.classList.toggle("acc-active");
+      var panel = this.nextElementSibling;
+      if (panel.style.maxHeight) {
+        panel.style.maxHeight = null;
+      } else {
+        panel.style.maxHeight = panel.scrollHeight + "px";
+      }
+    });
+  }
+</script>
+
+<style>
+  .accordion-container {
+    margin-top: 2em;
+    margin-bottom: 2em;
+    margin-left: 8em;
+    margin-right: 8em;
+  }
+
+  .accordion {
+    cursor: pointer;
+    padding: 18px;
+    width: 100%;
+    text-align: left;
+    border: none;
+    outline: none;
+    transition: 0.4s;
+    background-color: {{ section.settings.btn_color }};
+    color: {{ section.settings.btn_text_color }};
+  }
+
+  .acc-active, .accordion:hover {
+    background-color: {{ section.settings.btn_color_hover }};
+    color: {{ section.settings.btn_text_color_hover }};
+  }
+
+  .acc-panel {
+    padding: 0 18px;
+    overflow: hidden;
+  }
+  
+  .acc-panel {
+    padding: 0 18px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease-out;
+    background-color: {{ section.settings.ans_bg_color }};
+    color: {{ section.settings.ans_text_color }};
+  }
+  
+  .accordion:after {
+    content: '\02795'; 
+    font-size: 13px;
+    color: {{ section.settings.btn_text_color_hover }};
+    float: right;
+    margin-left: 5px;
+  }
+
+  .acc-active:after {
+    content: "\2796"; 
+  }
+      
+
+
+  @media screen and (max-width: 600px) {
+    .accordion-container {
+      margin: 1em;
+    }
+  }
+</style>
+
+{% schema %}
+  {
+    "name": "Accordion List",
+    "settings": [
+      {
+        "type": "text",
+        "label": "Section Title",
+        "id": "heading"
+      },
+	  {
+        "type": "color",
+        "id": "btn_color",
+        "label": "Question Background Color",
+        "default": "#123456"
+      },
+      {
+        "type": "color",
+        "id": "btn_color_hover",
+        "label": "Question Background Hover Color",
+        "default": "#345678"
+      },
+	  {
+        "type": "color",
+        "id": "btn_text_color",
+        "label": "Question Text Color",
+        "default": "#efefef"
+      },
+      {
+        "type": "color",
+        "id": "btn_text_color_hover",
+        "label": "Question Text Color Hover",
+        "default": "#ffffff"
+      },
+	  {
+        "type": "color",
+        "id": "ans_bg_color",
+        "label": "Answer Background Color",
+        "default": "#ffffff"
+      },
+	  {
+        "type": "color",
+        "id": "ans_text_color",
+        "label": "Answer Text Color",
+        "default": "#000000"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "text",
+        "name": "List Title",
+        "settings" : [
+          {
+            "type": "text",
+            "label": "Questions",
+            "id": "questions"
+          },
+          {
+            "type": "richtext",
+            "label": "Answers",
+            "id": "answers"
+          }
+        ]
+      }
+    ],
+    "presets" : [
+      {
+        "category": "text",
+        "name": "Accordion List"
+      }
+    ]
+  }
+{% endschema %}
