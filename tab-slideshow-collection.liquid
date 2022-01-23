@@ -1,0 +1,438 @@
+{% assign total_collection = 0 %}
+
+<div class="container">
+  <div class="tab">
+    {% for i in (1..section.blocks.size) %}
+      {% assign idx = i | minus: 1 %}
+      <button class="tablinks" onclick="openTab(event, 'Set{{ i }}', {{section.blocks.size}})" id="set{{i}}">{{ section.blocks[idx].settings.tab_header }}</button>
+    {% endfor %}
+  </div>
+
+  {% assign currentSlide = 1 %}
+  {% for i in (1..section.blocks.size) %}
+    {% assign idx = i | minus: 1 %}
+    {%- assign collection = collections[section.blocks[idx].settings.collection] -%}
+    <div id="Set{{i}}" class="tabcontent">
+      <div class="slideshow">
+        <div class="slideshow-container">
+          {% for product in collection.products %}
+            <div class="slideshow-product-container">
+              <div class="slide-block fade">
+                <img class="product-pic" src={{ product.featured_image | img_url: '400x'  }} style="width:100%">
+                <a class="prev" onclick="plusSlides(-1, {{i}}, {{collection.all_products_count}})">&#10094;</a>
+          		<a class="next" onclick="plusSlides(1, {{i}}, {{collection.all_products_count}})">&#10095;</a>  
+              </div>
+              <div class="caption-block slide">
+                <div class="caption-heading">{{product.title}}</div>
+                <div class="caption-text">{{product.description}}</div>
+                {% if section.blocks[idx].settings.product_link %}
+                <a href="{{product.url}}" class="button">Go to Product</a>
+                {% endif %}
+              </div>
+            </div>
+          {% endfor %} 
+        </div>
+        <div style="text-align:center">
+          {% for j in (1..collection.all_products_count) %}
+            <span class="dot" onclick="currentSlide({{ currentSlide }})"></span> 
+            {% assign currentSlide = currentSlide | plus: 1 %}
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+
+<script>
+  var slideIndex = 1;
+  showSlides(slideIndex);
+
+  function plusSlides(n, set, total_products) {
+    showSlides(slideIndex += n, set, total_products);
+  }
+
+  function currentSlide(n) {
+    showSlides(slideIndex = n);
+  }
+
+  function showSlides(n, set, total_products) {
+    slideIndex = n;
+    var i;
+    var slideLength = totalSlides;
+    var initialIndex = productIndex[(set-1)];
+    var slides = document.getElementsByClassName("slide-block");
+    var captions = document.getElementsByClassName("caption-block");
+    var dots = document.getElementsByClassName("dot");
+    if (n >= (initialIndex + total_products)) {slideIndex = initialIndex}    
+    if (n < initialIndex) {slideIndex = initialIndex + total_products - 1}
+    for (i = 0; i < slides.length; i++) {
+        slides[i].style.display = "none";  
+        captions[i].style.display = "none";
+    }
+    for (i = 0; i < dots.length; i++) {
+      dots[i].className = dots[i].className.replace(" active", "");
+    }
+    slides[slideIndex-1].style.display = "flex";  
+    captions[slideIndex-1].style.display = "flex";  
+    dots[slideIndex-1].className += " active";
+  }
+</script>
+
+
+<script>
+  var setup = false;
+  var productIndex = [1]  // set the start index of each tab, start index is the cumulative addition of the product count in each collections
+  var prevIndexValue = 1
+  var totalSlides = 0
+  
+  function getTotalProductPerSet(totalSet) {
+    for (var i=0; i < totalSet; i++) {
+      var className = '#Set' + (i + 1);
+      var clist = document.querySelectorAll(className + ' :nth-child(1)');
+      var currentIndex =  clist[0].getElementsByClassName("slide-block").length
+      productIndex.push(prevIndexValue + currentIndex);
+      prevIndexValue = prevIndexValue + currentIndex;
+    }
+   	totalSlides = prevIndexValue;
+  }
+</script>
+
+<script>
+  document.getElementById('set1').click();
+
+  function openTab(evt, setName, totalSet) {
+    if(setup == false) {
+      getTotalProductPerSet(totalSet);
+      setup = true;
+    }
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+      tabcontent[i].style.display = "none";
+    }
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+      tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    document.getElementById(setName).style.display = "block";
+    evt.currentTarget.className += " active";
+
+    var setNum = parseInt(setName.replace('Set', ''));
+    var start = productIndex[setNum -1 ]
+	showSlides(start, setNum);
+  }
+</script>
+
+
+<style>
+  .tab {
+    overflow: hidden;
+    background-color: white;
+  }
+
+  .tab button {
+    background-color:{{ section.settings.btn_color_hover }};
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+    font-size: 17px;
+    color: {{ section.settings.btn_text_color }};
+  }
+
+  .tab button:hover {
+    background-color: {{ section.settings.btn_color }};
+    color: {{ section.settings.btn_text_color_hover }};
+  }
+
+  .tab button.active {
+    background-color: {{ section.settings.btn_color }};
+    color: {{ section.settings.btn_text_color }};
+  }
+
+  .tabcontent {
+    display: none;
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+  }
+</style>
+
+
+<style>
+  
+  .container {
+    padding: 20px;
+    margin: 20px;
+  }
+
+  .slideshow {
+    position: relative;
+    background-image:
+      linear-gradient(white,white),
+      linear-gradient({{ section.settings.bg_color }},{{ section.settings.bg_color }}),
+      linear-gradient({{ section.settings.bg_color }},{{ section.settings.bg_color }}),
+      linear-gradient(white,white);
+    background-size:
+      calc(1 * (100% / 4)) 100%,
+      calc(2 * (100% / 4)) 100%,
+      calc(3 * (100% / 4)) 100%,
+      calc(4 * (100% / 4)) 100%;
+    background-repeat:no-repeat;
+  }
+  
+  .slideshow-product-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .slide-block {
+    display: none;
+    width: 80vh;
+    position: relative;
+  }
+  .caption-block {
+    display: none;
+    width: 30vw;
+    max-height: 50vh;
+    height: 100%;
+    padding: 1em;
+    background: {{ section.settings.box_color }};
+    box-shadow: 5px 5px 5px 5px #71707050;
+    color: {{ section.settings.text_color }};
+    flex-direction: column;
+    overflow: scroll;
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+  
+  .caption-block::-webkit-scrollbar {
+    display: none;
+  }
+
+
+  
+  .product-pic {
+    vertical-align: middle;
+    height: 60vh;
+    width: 40vw;
+    object-fit: cover;
+    padding: 10px;
+  }
+  .slideshow-container {
+    max-width: 100%;
+    position: relative;
+  }
+
+  .prev, .next {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    width: auto;
+    padding: 16px;
+    margin-top: -22px;
+    color: {{ section.settings.btn_text_color }};
+    font-weight: bold;
+    font-size: 18px;
+    transition: 0.6s ease;
+    border-radius: 0 3px 3px 0;
+    user-select: none;
+    background: {{ section.settings.btn_color_hover }};
+  }
+  .next {
+    left: 710px;
+    border-radius: 3px 0 0 3px;
+  }
+  .prev:hover, .next:hover {
+    background-color: {{ section.settings.btn_color }};
+    color: {{ section.settings.btn_text_color_hover }};
+  }
+  .dot {
+    cursor: pointer;
+    height: 15px;
+    width: 15px;
+    margin: 0 2px;
+    background-color: {{ section.settings.btn_color_hover }};
+    border-radius: 50%;
+    display: inline-block;
+    transition: background-color 0.6s ease;
+  }
+  .active {
+    background-color: {{ section.settings.btn_color }};
+  }
+  .dot:hover {
+    background-color: {{ section.settings.btn_color }};
+  }
+  .fade {
+    -webkit-animation-name: fade;
+    -webkit-animation-duration: 1.5s;
+    animation-name: fade;
+    animation-duration: 1.5s;
+  }
+  .slide {
+    -webkit-animation-name: slide;
+    -webkit-animation-duration: 1s;
+    animation-name: slide;
+    animation-duration: 1s;
+  }
+  .caption-heading {
+    font-size: 3em;
+    padding: 0.5em;
+    line-height: 1em;
+  }
+  .caption-text {
+    margin: 1em;  
+  }
+  .button {
+    font-size: 1em;
+    padding: 0.8em;
+    color: {{ section.settings.btn_text_color }};
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s ease-out;
+    background: {{ section.settings.btn_color }};
+    white-space: nowrap;
+  }
+  .button:hover {
+    background: {{ section.settings.btn_color_hover }};
+    text-decoration: none;
+  }
+
+  @-webkit-keyframes fade {
+    from {opacity: .4} 
+    to {opacity: 1}
+  }
+
+  @keyframes fade {
+    from {opacity: .4} 
+    to {opacity: 1}
+  }
+
+  @-webkit-keyframes slide {
+    from {transform: translateX(70%);} 
+    to {transform: translateX(0);}
+  }
+
+  @keyframes slide {
+    from {transform: translateX(70%);} 
+    to {transform: translateX(0);}
+  }
+
+  @media screen and (max-width: 1160px), screen and (max-height: 800px) {
+    .slideshow-container {
+      margin: inherit;
+    }
+    .slide-block {
+      width: auto;
+      margin: 1em;
+    }
+    .next {
+      right: 0%;
+      left: auto;
+    }
+    .caption-container {
+      position: relative;
+      left: 0;
+    }
+
+  }
+  
+  @media screen and (max-width: 768px) {
+  	.slideshow-product-container { flex-direction: column; }
+    .caption-block { width: 100%; }
+  }
+
+  @media (max-width: 500px) {
+    .caption-heading { font-size: 1.5em; font-weight: 600;}  
+    .container { margin: 10px; padding: 0; }
+  }
+</style>
+
+{% schema %}
+  {
+    "name": "Tab Collection Slideshow",
+    "settings": [
+      {
+        "type": "color",
+        "id": "bg_color",
+        "label": "Background Color",
+        "default": "#007faa"
+      },
+      {
+        "type": "color",
+        "id": "btn_color",
+        "label": "Button Color (Active)",
+        "default": "#123456"
+      },
+      {
+        "type": "color",
+        "id": "btn_color_hover",
+        "label": "Button Color (Inactive)",
+        "default": "#345678"
+      },
+      {
+        "type": "color",
+        "id": "btn_text_color",
+        "label": "Button Text Color",
+        "default": "#efefef"
+      },
+      {
+        "type": "color",
+        "id": "btn_text_color_hover",
+        "label": "Button Text Color Hover",
+        "default": "#ffffff"
+      },
+      {
+        "type": "color",
+        "id": "box_color",
+        "label": "Product Box Color",
+        "default": "#efefef"
+      },
+      {
+        "type": "color",
+        "id": "text_color",
+        "label": "Text Color",
+        "default": "#656565"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "featured_collection",
+        "name": "Collection",
+        "settings": [
+          {
+            "label": "Tab Header",
+            "id": "tab_header",
+            "type": "text",
+            "default": "Set"
+          },
+          {
+            "label": "Collection",
+            "id": "collection",
+            "type": "collection"
+          },
+          {
+            "type": "checkbox",
+            "id": "product_link",
+            "label": "Show Product Link",
+            "default": true
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Tab Collection Slideshow",
+        "category": "Collection"
+      }
+    ]
+  }
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}
