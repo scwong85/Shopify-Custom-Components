@@ -1,0 +1,121 @@
+<div class="flex-box-container">
+  <h1 style="text-align: center">{{ section.settings.heading }}</h1>
+  <div class="flex-box-row">
+    {% for block in section.blocks %}
+      <div class="flex-box-col" 
+        style="
+          background: url({{ block.settings.image | img_url: 'master'}});
+          background-size: cover;
+          background-position: center;
+          width: {{ block.settings.image_width }}px;
+          height: {{ block.settings.image_height }}px;
+          cursor: pointer;"
+        onclick="window.location='{{ block.settings.button_link }}';"
+      >
+        <div class="flex-box-text-container" style="color: {{ block.settings.text_color }}; text-shadow: 2px 2px 5px {{ block.settings.text_color }}50;">    
+          {{ block.settings.image_title }}
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+<style>
+  .flex-box-container {
+  	margin: 2em;
+  }
+  .flex-box-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+  }
+  .flex-box-col {
+    margin: 1em;
+    position: relative;
+    box-shadow: 5px 5px 5px 5px rgba(100, 100, 100, 0.5);
+    transition: transform .25s linear;
+  }
+  .flex-box-col:hover {
+    transform: scale(1.1)
+  }
+  .flex-box-text-container {
+  	position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 60px;
+    font-weight: 600;
+  }
+</style>
+
+{% schema %}
+  {
+    "name": "Flex Box",
+    "settings": [
+      {
+        "type": "text",
+        "label": "Section Title",
+        "id": "heading"
+      }
+	  ],
+    "blocks": [
+      {
+        "type": "image",
+        "name": "image block",
+        "settings" : [
+          {
+            "type": "text",
+            "label": "Image Title",
+            "id": "image_title"
+          },
+          {
+            "type": "color",
+            "label": "Text Color",
+            "id": "text_color",
+            "default": "#efefef"
+          },
+          {
+            "type": "image_picker",
+            "label": "Image",
+            "id": "image"
+          },
+          {
+            "type": "range",
+            "id": "image_width",
+            "min": 100,
+            "max": 800,
+            "step": 10,
+            "unit": "px",
+            "label": "Image Width",
+            "default": 320
+          },
+          {
+            "type": "range",
+            "id": "image_height",
+            "min": 100,
+            "max": 800,
+            "step": 10,
+            "unit": "px",
+            "label": "Image Height",
+            "default": 450
+          },
+          {
+            "type": "url",
+            "label": "Button Link",
+            "id": "button_link"
+          }
+        ]
+      }
+    ],
+    "presets" : [
+      {
+        "category": "image",
+        "name": "Flex Box With Text Overlay on Image"
+      }
+    ]
+  }
+{% endschema %}
+
+
+{% javascript %}
+{% endjavascript %}

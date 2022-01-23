@@ -7,3 +7,4 @@ The component/section can now be added from Shopify Customize Theme interface.
 
 List of components:
 - Tab Slideshow Collection
+- Flexbox with Image and Text Overlay
