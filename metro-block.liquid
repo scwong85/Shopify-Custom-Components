@@ -1,0 +1,212 @@
+<div class="container">
+    <div class="pic-container" id="pic-container" 
+         style="background: url({{ section.settings.bg_img | img_url: 'master' }});
+                background-size: cover;
+                background-repeat: no-repeat;"
+	>
+	  {% for block in section.blocks %}
+        <div class="metro-flip-card">
+          <div class="metro-flip-card-inner">
+            <div class="metro-flip-card-front" 
+                 style="background: url({{ block.settings.image | img_url: 'master' }});
+                        background-size: cover;
+                        background-repeat: no-repeat;"
+            >   
+            </div>
+            <div class="metro-flip-card-back"></div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    <div class="metro-text-container">
+      <h1>{{ section.settings.header }}</h1>
+      <p>{{ section.settings.description }}</p>
+    </div>
+
+  </div>
+
+<script>
+
+  setInterval(function(){
+    var parentSelector = document.querySelector('#pic-container');
+    var  random = Math.floor(1 + Math.random() * parentSelector.childElementCount);
+    child = document.querySelector('#pic-container>.metro-flip-card:nth-child('+ random + ')');
+    if(child) {
+      var elem = child.children[0];
+      elem.style.transform = "rotateY(180deg)";
+      setTimeout(function (){
+        elem.style.transform = "rotateY(0deg)";
+      }, 3000)
+      
+    }
+  }, 1000)
+
+
+
+  var elem = document.getElementById('pic-container');
+  var comp = document.getElementById("pic-container").childElementCount;
+  switch (comp) {
+    case 1:
+      elem.children[0].style.width = '100%';
+      elem.children[0].style.height = '100%';
+      break
+      case 2:
+      elem.children[0].style.width = '100%';
+      elem.children[0].style.height = '50%';
+      elem.children[1].style.width = '100%';
+      elem.children[1].style.height = '50%';
+      break
+      case 3:
+      elem.children[0].style.width = '100%';
+      elem.children[0].style.height = '50%';
+      elem.children[1].style.width = '50%';
+      elem.children[1].style.height = '50%';
+      elem.children[2].style.width = '50%';
+      elem.children[2].style.height = '50%';
+      break
+      case 4:
+      elem.children[0].style.width = '50%';
+      elem.children[0].style.height = '50%';
+      elem.children[1].style.width = '50%';
+      elem.children[1].style.height = '50%';
+      elem.children[2].style.width = '50%';
+      elem.children[2].style.height = '50%';
+      elem.children[3].style.width = '50%';
+      elem.children[3].style.height = '50%';
+      break
+      default:
+      break;
+  }
+  
+  
+
+</script>
+
+<style>
+  .container {
+    display: flex;
+    margin: 3em;
+    box-shadow: 5px 5px 5px 5px rgba(100, 100, 100, 0.5);
+  }
+
+  .pic-container {
+    
+    width: 30vw;
+    height: 30vw;
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .metro-text-container {
+    width: calc(100% - 30vw);
+    text-align: center;
+    padding: 1em;
+  }
+
+  .metro-flip-card {
+    background-color: transparent;
+    perspective: 1000px; /* Remove this if you don't want the 3D effect */
+    
+    
+  }
+
+  /* This container is needed to position the front and back side */
+  .metro-flip-card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    transition: transform 0.8s;
+    transform-style: preserve-3d;
+    
+  }
+
+  .metro-flip-card:hover .metro-flip-card-inner {
+    transform: rotateY(180deg);
+  }
+
+  .metro-flip-card-front, .metro-flip-card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    -webkit-backface-visibility: hidden; /* Safari */
+    backface-visibility: hidden;
+  }
+
+  .metro-flip-card-front {
+    background-color: #bbb;
+    color: black;
+  }
+
+  .metro-flip-card-front span {
+    font-size: 30px;
+    color: black;
+    position: absolute;
+    left: 10%;
+    bottom: 10%;
+  }
+
+  .metro-flip-card-back {
+    transform: rotateY(180deg);
+    padding: 1em;
+    overflow: scroll;
+	-ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+
+  .metro-flip-card-back::-webkit-scrollbar {
+    display: none;
+  }
+</style>
+
+{% schema %}
+  {
+    "name": "Metro Section",
+	"max_blocks": 4,
+    "settings": [
+	  {
+		"type": "image_picker",
+		"id": "bg_img",
+		"label": "Image"
+	  },
+	  {
+        "type": "text",
+        "id": "header",
+        "label": "Header",
+        "default": "Header"
+      },
+	  {
+        "type": "textarea",
+        "id": "description",
+        "label": "Description",
+        "default": "Description"
+      }
+	],
+	"blocks": [
+	  {
+		"type": "image",
+		"name": "Flip Image",
+	    "settings": [
+		  {
+			"type": "image_picker",
+			"id": "image",
+			"label": "Image"
+		  }
+		]
+	  }
+	],
+	"presets": [
+      {
+        "name": "Metro Section",
+        "category": "Image"
+      }
+    ]
+  }
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

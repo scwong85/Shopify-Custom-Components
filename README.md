@@ -10,3 +10,4 @@ List of components:
 - Flexbox with Image and Text Overlay
 - Accordion List
 - Flexbox Flip Card with Image and Text
+- Metro Block with Image Flip
