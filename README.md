@@ -9,3 +9,4 @@ List of components:
 - Tab Slideshow Collection
 - Flexbox with Image and Text Overlay
 - Accordion List
+- Flexbox Flip Card with Image and Text

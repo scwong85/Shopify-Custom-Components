@@ -1,0 +1,232 @@
+<div class="flex-container wrap">
+  {% for block in section.blocks %}
+  	<div class="flip-card">
+      <div class="flip-card-inner">
+        <div class="flip-card-front" 
+             style="background: url({{ block.settings.image | img_url: 'master' }});
+                    background-size: cover;
+                    background-repeat: no-repeat;"
+        >
+          <span style="color: {{ block.settings.front_text_color }}"><h1>{{ block.settings.card_front_text }}</h1></span>
+        </div>
+        <div class="flip-card-back" style="color: {{ block.settings.back_text_color }}; background-color: {{ block.settings.back_bg_color }}">
+          <h1>{{ block.settings.card_back_header }}</h1>
+          <p class="flip-card-back-description">{{ block.settings.card_back_description }}</p>
+          {% if  block.settings.show_button %} <a href="{{ block.settings.url }}" class="button"> {{ block.settings.button_text }} </a> {% endif %}
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+  
+</div>
+
+
+<style>
+
+  .flip-card {
+    background-color: transparent;
+    width: {{ section.settings.image_height }}px;
+    height: {{ section.settings.image_width }}px;
+    perspective: 1000px; /* Remove this if you don't want the 3D effect */
+    margin: 1em;
+    box-shadow: 5px 5px 5px 5px rgba(100, 100, 100, 0.5);
+    
+  }
+
+  /* This container is needed to position the front and back side */
+  .flip-card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    transition: transform 0.8s;
+    transform-style: preserve-3d;
+    
+  }
+
+  .flip-card:hover .flip-card-inner {
+    transform: rotateY(180deg);
+  }
+
+  .flip-card-front, .flip-card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    -webkit-backface-visibility: hidden; /* Safari */
+    backface-visibility: hidden;
+  }
+
+  .flip-card-front {
+    background-color: #bbb;
+    color: black;
+  }
+
+  .flip-card-front span {
+    font-size: 30px;
+    color: black;
+    position: absolute;
+    left: 10%;
+    bottom: 10%;
+  }
+
+  .flip-card-back {
+    transform: rotateY(180deg);
+    padding: 1em;
+    overflow: scroll;
+	-ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+
+  .flip-card-back::-webkit-scrollbar {
+    display: none;
+  }
+
+
+  .flex-container {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    -ms-box-orient: horizontal;
+    display: flex;
+    justify-content: space-around;
+  }
+
+  .nowrap  { 
+    -webkit-flex-wrap: nowrap;
+    flex-wrap: nowrap;
+  }
+
+  .wrap    { 
+    -webkit-flex-wrap: wrap;
+    flex-wrap: wrap;
+  }  
+  .wrap li {
+    background: gold;
+  }
+
+  .wrap-reverse         { 
+    -webkit-flex-wrap: wrap-reverse;
+    flex-wrap: wrap-reverse;
+  }  
+  .wrap-reverse li {
+    background: deepskyblue;
+  }
+
+  .flex-item {
+    background: tomato;
+    padding: 5px;
+    width: 100px;
+    height: 100px;
+    margin: 10px;
+
+    line-height: 100px;
+    color: white;
+    font-weight: bold;
+    font-size: 2em;
+    text-align: center;
+  }
+</style>
+
+{% schema %}
+  {
+    "name": "Flip Card",
+    "settings": [
+	  {
+        "type": "range",
+        "id": "image_width",
+        "min": 100,
+        "max": 800,
+        "step": 10,
+        "unit": "px",
+        "label": "Image Width",
+        "default": 500
+      },
+	  {
+        "type": "range",
+        "id": "image_height",
+        "min": 100,
+        "max": 800,
+        "step": 10,
+        "unit": "px",
+        "label": "Image Width",
+        "default": 300
+      }
+	],
+	"blocks": [
+	  {
+        "name": "Flip card",
+        "type": "image",
+        "settings": [
+		  {
+            "type": "image_picker",
+            "label": "Image",
+            "id": "image"
+          },
+		  {
+			"type": "text",
+		    "label": "Front Text",
+		    "id": "card_front_text"
+		  },
+	      {
+            "type": "color",
+            "label": "Front Text Color",
+            "id": "front_text_color",
+            "default": "#efefef"
+          },
+		  {
+			"type": "text",
+		    "label": "Back Header",
+		    "id": "card_back_header"
+		  },
+		  {
+			"type": "textarea",
+		    "label": "Back Description",
+		    "id": "card_back_description"
+		  },
+		  {
+            "type": "color",
+            "label": "Back Text Color",
+            "id": "back_text_color",
+            "default": "#efefef"
+          },
+		  {
+            "type": "color",
+            "label": "Back Background Color",
+            "id": "back_bg_color",
+            "default": "#007faa"
+          },
+		  {
+            "type": "checkbox",
+            "id": "show_button",
+            "label": "Show Button Link",
+            "default": true
+          },
+          {
+            "type": "url",
+            "id": "button_link",
+            "label": "Button Link"
+          },
+		  {
+			"type": "text",
+		    "label": "Button Text",
+		    "id": "button_text",
+			"default": "Go To Link"
+		  }
+        ]
+	  }
+
+	],
+    "presets" : [
+      {
+        "category": "image",
+        "name": "Flip Image Card With Description"
+      }
+    ]
+  }
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}
