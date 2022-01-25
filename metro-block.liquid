@@ -1,4 +1,4 @@
-<div class="container">
+<div class="metro-container">
     <div class="pic-container" id="pic-container" 
          style="background: url({{ section.settings.bg_img | img_url: 'master' }});
                 background-size: cover;
@@ -84,7 +84,7 @@
 </script>
 
 <style>
-  .container {
+  .metro-container {
     display: flex;
     margin: 3em;
     box-shadow: 5px 5px 5px 5px rgba(100, 100, 100, 0.5);
@@ -102,6 +102,10 @@
     width: calc(100% - 30vw);
     text-align: center;
     padding: 1em;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
   }
 
   .metro-flip-card {
@@ -157,6 +161,12 @@
 
   .metro-flip-card-back::-webkit-scrollbar {
     display: none;
+  }
+  
+  @media screen and (max-width: 500px) {
+    .metro-container { flex-direction: column; margin: 1em;}
+    .metro-text-container { width: 100%; }
+    .pic-container { width: unset; height: calc(100vw - 1em);}
   }
 </style>
 

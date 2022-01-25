@@ -1,6 +1,6 @@
 {% assign total_collection = 0 %}
 
-<div class="container">
+<div class="slideshow-section-container">
   <div class="tab">
     {% for i in (1..section.blocks.size) %}
       {% assign idx = i | minus: 1 %}
@@ -162,7 +162,7 @@
 
 <style>
   
-  .container {
+  .slideshow-section-container {
     padding: 20px;
     margin: 20px;
   }
@@ -242,7 +242,7 @@
     background: {{ section.settings.btn_color_hover }};
   }
   .next {
-    left: 710px;
+    right: 0px;
     border-radius: 3px 0 0 3px;
   }
   .prev:hover, .next:hover {
@@ -347,6 +347,7 @@
   @media (max-width: 500px) {
     .caption-heading { font-size: 1.5em; font-weight: 600;}  
     .container { margin: 10px; padding: 0; }
+    .slideshow-section-container { margin: 1em; padding: 0; }
   }
 </style>
 
