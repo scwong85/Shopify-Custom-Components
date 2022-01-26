@@ -6,8 +6,11 @@ To add the desired component, create a new section file in the Shopify Theme Sec
 The component/section can now be added from Shopify Customize Theme interface.
 
 List of components:
-- Tab Slideshow Collection
-- Flexbox with Image and Text Overlay
+- Tab Collection Slides
+- Flex Box with Image and Link
 - Accordion List
-- Flexbox Flip Card with Image and Text
-- Metro Block with Image Flip
+- Flex Flip Card with Image and Link
+- Metro Style Info Box
+- Image and Text Collage (re-arrange the order of text or images in Shopify Customize Theme interface to get the collage effects you desired)
+
+Demo link here: https://m44tzm0cp85izfl0-45081788583.shopifypreview.com
