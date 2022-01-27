@@ -1,7 +1,7 @@
 <div class="collage-container">
   {% for block in section.blocks %}
   <div class="collage" style="grid-column: span {{ block.settings.img_width }}; grid-row: span {{ block.settings.img_height }}">
-  	{% if block.settings.img %}<img class="collage-img" src={{ block.settings.img | img_url: 'master'  }}  /> {% endif %}
+  	{% if block.settings.img %}<img class="collage-img" src={{ block.settings.img | img_url: '400x'  }}  /> {% endif %}
     <div class="collage-txt" style="color: {{ block.settings.txt_color }}; {% if block.settings.img %}position: absolute{% endif %}">
       <div class="collage-heading"><h3>{{ block.settings.collage_heading }}</h3></div>
       <div class="collage-desc">{{ block.settings.collage_desc}}</div>
@@ -20,6 +20,7 @@
   .collage {
   	position: relative;
     border: 1px solid {{ section.settings.border_color }};
+    overflow: hidden;
   }
   
   .collage-img {
@@ -31,10 +32,15 @@
 
   }
   
+  .collage-img:hover, .collage-txt:hover	 {
+    transform: scale(1.05);
+  }
+  
   .collage-txt {
     padding: 1em;
     top: 1em;
     left: 1em;
+    transition: transform .5s;
   }
   
   @media (max-width: 600px) {

@@ -3,9 +3,10 @@
   	<div class="flip-card">
       <div class="flip-card-inner">
         <div class="flip-card-front" 
-             style="background: url({{ block.settings.image | img_url: 'master' }});
+             style="background: url({{ block.settings.image | img_url: '400x' }});
                     background-size: cover;
-                    background-repeat: no-repeat;"
+                    background-repeat: no-repeat;
+                    background-position: center"
         >
           <span style="color: {{ block.settings.front_text_color }}"><h1>{{ block.settings.card_front_text }}</h1></span>
         </div>

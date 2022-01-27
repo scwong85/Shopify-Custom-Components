@@ -1,9 +1,9 @@
-<div class="para-container">
+<div class="para-container" id="para-container">
   <div class="para-left">
-    <img class="parallax-img" src="{{ section.settings.left_img | img_url: 'master' }}" alt="">
+    <img class="parallax-img" src="{{ section.settings.left_img | img_url: '400x' }}" alt="">
   </div>
   <div class="para-right">
-    <img class="parallax-img"  src="{{ section.settings.right_img | img_url: 'master' }}" alt="">
+    <img class="parallax-img"  src="{{ section.settings.right_img | img_url: '400x' }}" alt="">
   </div>
 </div>
 
@@ -40,6 +40,26 @@
   }
 </style>
 
+
+<script>
+function isElementInViewport (el) {
+
+    // Special bonus for those using jQuery
+    if (typeof jQuery === "function" && el instanceof jQuery) {
+        el = el[0];
+    }
+
+    var rect = el.getBoundingClientRect();
+
+    return (
+        rect.top >= 0 &&
+        rect.left >= 0 &&
+        rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) && /* or $(window).height() */
+        rect.right <= (window.innerWidth || document.documentElement.clientWidth) /* or $(window).width() */
+    );
+}
+</script>
+
 <script>
   var scdir = false;
   var yPos = 0;
@@ -51,24 +71,31 @@
     distance = parseInt(distance);
     var pyo = window.pageYOffset;
 
-    if (e.deltaY < 0) {
-      scdir = 'up';
-      if (pyo > 0) {
-        yPos = yPos + distance;
-      }
+    var paraElem = document.getElementById("para-container");
+    var inView = isElementInViewport(paraElem);
 
-    }
-    if (e.deltaY > 0) {
-      scdir = 'down';
-      if ((window.innerHeight + window.scrollY) < document.body.offsetHeight) {
-        yPos = yPos - distance;
+    if (inView) {
+      if (e.deltaY < 0) {
+        scdir = 'up';
+        if (pyo > 0) {
+          yPos = yPos + distance;
+        }
+
       }
-      
+      if (e.deltaY > 0) {
+        scdir = 'down';
+        if ((window.innerHeight + window.scrollY) < document.body.offsetHeight) {
+          yPos = yPos - distance;
+        }
+
+      }
+      var elems = document.querySelectorAll('.parallax-img');
+      [].forEach.call(elems, function(elem) {
+        elem.style.transform = "translateY(" + yPos + "px) translateZ(-.1px)";
+      });
     }
-    var elems = document.querySelectorAll('.parallax-img');
-    [].forEach.call(elems, function(elem) {
-      elem.style.transform = "translateY(" + yPos + "px) translateZ(-.1px)";
-    });
+    
+    
     
     e.stopPropagation();
   })
