@@ -8,6 +8,7 @@ The component/section can now be added from Shopify Customize Theme interface.
 List of components:
 - Tab Collection Slides
 - Flex Box with Image and Link
+- Sticky Collection Info (Desktop only)
 - Accordion List
 - Flex Flip Card with Image and Link
 - Metro Style Info Box
