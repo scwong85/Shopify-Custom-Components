@@ -24,7 +24,6 @@
   .para-left, .para-right {
     width: 45%;
     height: 100%;
-    background: beige;
     overflow: hidden;
   }
 
@@ -35,6 +34,10 @@
     margin-top: -20%;
   }
   
+  @media (max-width: 600px) {
+    .para-left, .para-right { width: 100%; margin: 1em 0;}
+    .para-container { margin: 1em; padding: 1em; flex-direction: column; height: 90%}
+  }
 </style>
 
 <script>
