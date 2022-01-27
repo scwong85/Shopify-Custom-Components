@@ -1,0 +1,124 @@
+<div class="para-container">
+  <div class="para-left">
+    <img class="parallax-img" src="{{ section.settings.left_img | img_url: 'master' }}" alt="">
+  </div>
+  <div class="para-right">
+    <img class="parallax-img"  src="{{ section.settings.right_img | img_url: 'master' }}" alt="">
+  </div>
+</div>
+
+
+<input type=hidden id="move-distance" value="{{ section.settings.distance }}" />
+
+<style>
+  .para-container {
+    margin: 2em;
+    padding: 2em;
+    display: flex;
+    justify-content: space-around;
+    height: {{ section.settings.image_height }}vh;
+    
+  }
+
+
+  .para-left, .para-right {
+    width: 45%;
+    height: 100%;
+    background: beige;
+    overflow: hidden;
+  }
+
+  .parallax-img {
+    width: 100%;
+    object-position: center;
+    transition: transform 1.5s linear;
+    margin-top: -20%;
+  }
+  
+</style>
+
+<script>
+  var scdir = false;
+  var yPos = 0;
+
+  "use strict";
+  var well = document.body;
+  well.addEventListener("wheel", function(e) {
+    var distance = document.getElementById("move-distance").value;
+    distance = parseInt(distance);
+    var pyo = window.pageYOffset;
+
+    if (e.deltaY < 0) {
+      scdir = 'up';
+      if (pyo > 0) {
+        yPos = yPos + distance;
+      }
+
+    }
+    if (e.deltaY > 0) {
+      scdir = 'down';
+      if ((window.innerHeight + window.scrollY) < document.body.offsetHeight) {
+        yPos = yPos - distance;
+      }
+      
+    }
+    var elems = document.querySelectorAll('.parallax-img');
+    [].forEach.call(elems, function(elem) {
+      elem.style.transform = "translateY(" + yPos + "px) translateZ(-.1px)";
+    });
+    
+    e.stopPropagation();
+  })
+
+</script>
+
+
+{% schema %}
+  {
+    "name": "Paralallx Image Container",
+    "settings": [
+	  {
+        "type": "range",
+        "id": "image_height",
+        "min": 30,
+        "max": 100,
+        "step": 5,
+        "unit": "vh",
+        "label": "Image Height",
+        "default": 30
+      },
+	  {
+        "type": "range",
+        "id": "distance",
+        "min": 5,
+        "max": 100,
+        "step": 5,
+        "unit": "px",
+        "label": "Parallax distance",
+        "default": 5
+      },
+	  {
+		"type": "image_picker",
+		"label": "Left Image",
+		"id": "left_img"
+	  },
+	  {
+		"type": "image_picker",
+		"label": "Right Image",
+		"id": "right_img"
+	  }
+	],
+	"presets": [
+	  {
+		"category": "image",
+		"name": "Parallax Image"
+	  }
+	]
+  }
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}
