@@ -1,0 +1,178 @@
+<div class="unveil-container" id="unveil-container">
+  {% assign loop_count = section.settings.total_masks %}
+  {% for i in (1..loop_count) %}
+  	<div class="door">
+  	  <img class="door-img" src="{{ section.settings.front_img | img_url: '1000x' }}" alt="">
+    </div>
+  {% endfor %}
+</div>
+
+<input id="total_masks" type="hidden" value={{ section.settings.total_masks }} />
+
+<style>
+  .unveil-container {
+    background: url({{ section.settings.back_img | img_url: '1000x' }});
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    overflow: hidden;
+    height: {{ section.settings.container_height }}vh;
+    width: calc({{ section.settings.container_width }}vw - 2em);
+    margin-left: {{ section.settings.margin_left }}%;
+  }
+
+  .door-img {
+    width: calc({{ section.settings.container_width }}vw - 2em);
+    height: {{ section.settings.container_height }}vh;
+    object-fit: cover;
+  }
+
+  .door {
+    width: calc(100% / {{ section.settings.total_masks }});
+    height: 100%;   
+    transition: transform 1s ease-in-out;
+    mask-image: linear-gradient(black, white);
+    overflow: hidden;
+  }
+</style>
+
+
+<script>
+function isElementInFullViewport (el) {
+  // Special bonus for those using jQuery
+  if (typeof jQuery === "function" && el instanceof jQuery) {
+    el = el[0];
+  }
+
+  var rect = el.getBoundingClientRect();
+
+  return (
+    rect.top >= 0 &&
+    rect.left >= 0 &&
+    rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) && 
+    rect.right <= (window.innerWidth || document.documentElement.clientWidth) 
+  );
+  
+}
+</script>
+
+<script>
+
+  var tm = document.getElementById('total_masks');
+  var total_masks = parseInt(tm.value);
+  var adjust = 100/total_masks;
+  
+  var imgs = document.querySelectorAll('.door-img');
+  [].forEach.call(imgs, function(img, i) {
+    var adjustment = i*(-adjust) + "%";
+    img.style.transform = "translateX(" + adjustment +")";
+  }) 
+
+
+  function liftDoor(lift) {
+    if (lift) {
+      doors = document.querySelectorAll('.door');
+      [].forEach.call(doors, function (door, i) {
+        
+        if (i%2 == 0) {
+          door.style.transform = "translateY(-100%)";
+        } else {
+          door.style.transform = "translateY(100%)";
+        }
+      })
+    } else {
+      [].forEach.call(doors, function (door, i) {
+        door.style.transform = "translateY(0%)";
+      })
+    }
+  }
+</script>
+
+<script>
+
+  "use strict";
+
+  window.addEventListener("scroll", function(e) {
+    var paraElem = document.getElementById("unveil-container");
+    var inView = isElementInFullViewport(paraElem);
+    if (inView) {
+      liftDoor(true);
+    } else {
+      liftDoor(false);
+    }
+    e.stopPropagation();
+  })
+  
+
+</script>
+
+
+{% schema %}
+  {
+    "name": "Image Unveil",
+    "settings": [
+	  {
+        "type": "range",
+        "id": "container_height",
+        "min": 30,
+        "max": 100,
+        "step": 5,
+        "unit": "vh",
+        "label": "Container Height",
+        "default": 50
+      },
+	  {
+        "type": "range",
+        "id": "container_width",
+        "min": 30,
+        "max": 100,
+        "step": 5,
+        "unit": "vw",
+        "label": "Container Width",
+        "default": 100
+      },
+	  {
+        "type": "range",
+        "id": "margin_left",
+        "min": 0,
+        "max": 50,
+        "step": 1,
+        "unit": "%",
+        "label": "Margin Left",
+        "default": 5
+      },
+	  {
+        "type": "range",
+        "id": "total_masks",
+        "min": 2,
+        "max": 10,
+        "step": 2,
+        "unit": "b",
+        "label": "Total Mask Blocks",
+        "default": 8
+      },
+      {
+		"type": "image_picker",
+		"label": "Front Image",
+		"id": "front_img"
+	  },
+	  {
+		"type": "image_picker",
+		"label": "Back Image",
+		"id": "back_img"
+	  }
+	],
+	"presets" : [
+	  {
+		"category": "image",
+	    "name": "Image Unveil"
+	  }
+	]
+  }
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}
