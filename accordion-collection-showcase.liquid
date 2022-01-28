@@ -3,14 +3,15 @@
   {% for block in section.blocks %}
   	{% assign collection = block.settings.collection %}
     <div class="acc-collection-panel" onclick="expand(this)">
-      <div class="panel-head" style="background: linear-gradient(to bottom, white, transparent), url({{ collection.featured_image | img_url: '400x' }}); background-repeat: no-repeat; background-size: cover;">
+      <div class="panel-head" style="background: linear-gradient(to top, {{block.settings.banner_color}}, transparent); color: {{block.settings.banner_txt_color}}">
         <div class="acc-collection-name">{{collection.title}}</div>
       </div>
-      <div class="panel-body-container" style="
-                                               background: linear-gradient(to bottom, white, transparent), url({{ collection.featured_image | img_url: '1000x' }});
+      <div class="panel-body-container">
+        <div class="acc-collection-img" style="
+                                               background: url({{ collection.featured_image | img_url: '1000x' }});
                                                background-size: cover;
                                                background-position: center;                                      
-                                               ">
+                                               "></div>
         <div class="acc-collection-desc"><p>{{ collection.description }}</p><p> Check out collection <a href="{{collection.url}}"><b>here</b></a> </p></div>
       </div>
     </div>
@@ -23,8 +24,16 @@
   {% for block in section.blocks %}
     {% assign collection = block.settings.collection %}
     <div class="acc-collection-panel-mobile">
-      <button class="panel-head-mobile" onclick="toggleAccordion(this)">{{collection.title}}</button>
-      <div class="panel-body-container-mobile"><p>{{ collection.description }}</p><p> Check out collection <a href="{{collection.url}}"><b>here</b></a> </p></div>
+      <button class="panel-head-mobile" onclick="toggleAccordion(this)" style="background: linear-gradient(to right, {{block.settings.banner_color}}, transparent); color: {{block.settings.banner_txt_color}}">{{collection.title}}</button>
+      <div class="panel-body-container-mobile">
+        <div class="acc-collection-img-mobile" style="
+                                               background: url({{ collection.featured_image | img_url: '400x' }});
+                                               background-size: cover;
+                                               background-position: center;                                      
+                                               "></div>
+        <p style="padding: 1em">{{ collection.description }}</p>
+        <p style="padding: 1em"> Check out collection <a href="{{collection.url}}"><b>here</b></a> </p>
+      </div>
     </div>
   {% endfor %}
 </div>
@@ -125,8 +134,7 @@
   }
 
   .panel-body-container {
-    width: 60%;
-    margin: 3em;
+    width: calc(100% - ({{section.blocks.size}}*10%) );
     display: flex;
     align-items: center;
     justify-content: center;
@@ -142,10 +150,16 @@
     width: 40vw;
   }
 
+  .acc-collection-img {
+  	width: 50%;
+    height: 100%
+  }
+  
   .acc-collection-desc {
     text-align: center;
     background: white;
     padding: 1em;
+    height: 100%
   }
   
 
@@ -172,13 +186,12 @@
       outline: none;
       transition: 0.4s;
       white-space: initial;
-      background: #efefef;
     }
 
 
     
     .panel-body-container-mobile {
-      padding: 0 18px;
+      padding: 0;
       max-height: 0;
       overflow: hidden;
       transition: max-height 0.2s ease-out;
@@ -195,6 +208,11 @@
       background: url({{ section.settings.bg_img | img_url: '1000x' }});
       background-size: cover;
       background-position: center;
+    }
+    
+    .acc-collection-img-mobile {
+      width: 100%;
+      height: 200px;
     }
   }
   
@@ -226,6 +244,18 @@
             "type": "collection",
             "id": "collection",
             "label": "Collection"
+          },
+		  {
+            "type": "color",
+            "id": "banner_color",
+            "label": "Banner_color",
+			"default": "#888888"
+          },
+	      {
+            "type": "color",
+            "id": "banner_txt_color",
+            "label": "Banner Text Color",
+			"default": "#fff"
           }
 		]
 	  }
