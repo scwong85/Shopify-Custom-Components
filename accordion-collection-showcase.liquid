@@ -1,0 +1,246 @@
+<div class="acc-collection-container">
+  <h1 style="padding: 1em;">{{ section.settings.heading }}</h1>
+  {% for block in section.blocks %}
+  	{% assign collection = block.settings.collection %}
+    <div class="acc-collection-panel" onclick="expand(this)">
+      <div class="panel-head" style="background: linear-gradient(to bottom, white, transparent), url({{ collection.featured_image | img_url: '400x' }}); background-repeat: no-repeat; background-size: cover;">
+        <div class="acc-collection-name">{{collection.title}}</div>
+      </div>
+      <div class="panel-body-container" style="
+                                               background: linear-gradient(to bottom, white, transparent), url({{ collection.featured_image | img_url: '1000x' }});
+                                               background-size: cover;
+                                               background-position: center;                                      
+                                               ">
+        <div class="acc-collection-desc"><p>{{ collection.description }}</p><p> Check out collection <a href="{{collection.url}}"><b>here</b></a> </p></div>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+
+<div class="acc-collection-container-mobile"> 
+
+  <div class="acc-mobile-bg">  <h1 style="padding: 1em;">{{ section.settings.heading }}</h1></div>
+  {% for block in section.blocks %}
+    {% assign collection = block.settings.collection %}
+    <div class="acc-collection-panel-mobile">
+      <button class="panel-head-mobile" onclick="toggleAccordion(this)">{{collection.title}}</button>
+      <div class="panel-body-container-mobile"><p>{{ collection.description }}</p><p> Check out collection <a href="{{collection.url}}"><b>here</b></a> </p></div>
+    </div>
+  {% endfor %}
+</div>
+
+
+<script>
+  // init
+  var panels = document.querySelectorAll('.acc-collection-panel');
+  [].forEach.call(panels, function(panel, idx) {
+    panels[idx].style.left = 1*(idx*10) + "%";
+  })
+
+  function expand(elem) {
+    console.log(elem.parentElement)
+    var elemCls = Array.from(elem.classList);
+    var panels = document.querySelectorAll('.acc-collection-panel');
+
+    [].forEach.call(panels, function(panel, idx) {
+      if (panel == elem) {
+        var rect = elem.getBoundingClientRect();
+        elem.classList.toggle("open");
+        console.log(rect.left, window.innerWidth / 2)
+        if (rect.left > (window.innerWidth / 2)) {
+          elem.style.left = (idx*10) + "%";  // move to left
+          for (var i=0; i < idx; i++) {
+            var tmp = panels.length - i;
+            panels[i].style.left = (i*10) + "%";
+          }
+        } else {
+          var tmp = panels.length - idx;
+          elem.style.left = (100 - (tmp*10)) + "%"; //move to right
+          for (var i=idx+1; i < panels.length; i++) {
+            var tmp = panels.length - i;
+            panels[i].style.left = (100 - (tmp*10)) + "%";
+          }
+        }
+      } 
+    })
+  }
+</script>
+
+<script>
+  function toggleAccordion(elem) {
+    var elems = document.querySelectorAll('.panel-head-mobile');
+    [].forEach.call(elems, function(el) {
+      if (el == elem) {
+
+        var panel = elem.nextElementSibling;
+        if (panel.style.maxHeight) {
+          panel.style.maxHeight = null;
+        } else {
+          panel.style.maxHeight = panel.scrollHeight + "px";
+        }
+      } else {
+
+        var panel = el.nextElementSibling;
+        panel.style.maxHeight = null;
+      }
+    }) 
+  }
+</script>
+
+
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+  }
+
+  .acc-collection-container {
+    height: 40vw;
+    display: flex;
+    overflow: hidden;
+    position: relative;
+    margin: 2em;
+    box-shadow: 5px 5px 5px 5px #0000005e;
+    background: url({{ section.settings.bg_img | img_url: '1000x' }});
+    background-size: cover;
+    background-position: center;
+  }
+
+  .acc-collection-panel {
+    width: 100%;
+    height: 100%;
+    border: 1px solid white;
+    position: absolute;
+    transition: left 1.2s ease-in-out;
+    display: flex;
+    background: #efefef;
+    cursor: pointer;
+  }
+
+  .panel-head {
+    width: 10%;
+    height: 100%;
+    background: #cacaca;
+    position: relative; 
+  }
+
+  .panel-body-container {
+    width: 60%;
+    margin: 3em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .acc-collection-name {
+    transform: rotate(-90deg);
+    transform-origin: top left;
+    font-size: 48px;
+    position: absolute;
+    left: 20%;
+    bottom: 0;
+    width: 40vw;
+  }
+
+  .acc-collection-desc {
+    text-align: center;
+    background: white;
+    padding: 1em;
+  }
+  
+
+
+  .acc-collection-container-mobile {
+    display: none;
+  }
+</style>
+
+<style>
+  @media only screen and (max-width: 600px) {
+    .acc-collection-container-mobile {
+      display: block;
+      margin: 1em;
+      box-shadow: 3px 3px 3px 3px #0000005c;
+    }
+
+    .panel-head-mobile {
+      cursor: pointer;
+      padding: 18px;
+      width: 100%;
+      text-align: left;
+      border: none;
+      outline: none;
+      transition: 0.4s;
+      white-space: initial;
+      background: #efefef;
+    }
+
+
+    
+    .panel-body-container-mobile {
+      padding: 0 18px;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.2s ease-out;
+      height: 100%;
+    }
+
+    .acc-collection-container { 
+      display: none;
+    }
+    
+    .acc-mobile-bg {
+      width: 100%;
+      height: 40vh;
+      background: url({{ section.settings.bg_img | img_url: '1000x' }});
+      background-size: cover;
+      background-position: center;
+    }
+  }
+  
+</style>
+
+{% schema %}
+  {
+    "name": "Collection Showcase",
+    "max_blocks": 4,
+    "settings": [
+	  {
+		"type": "image_picker",
+		"id": "bg_img",
+		"label": "Background Image"
+	  },
+	  {
+		"type": "text",
+		"id": "heading",
+		"label": "Heading",
+		"default": "Collection Showcase"
+	  }
+	],
+	"blocks": [
+	  {
+		"type": "collection",
+		"name": "Collection",
+		"settings": [
+		  {
+            "type": "collection",
+            "id": "collection",
+            "label": "Collection"
+          }
+		]
+	  }
+	],
+	"presets": [
+	  {
+		"name": "Collection Showcase",
+		"category": "collection"
+	  }
+	]
+  }
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}
