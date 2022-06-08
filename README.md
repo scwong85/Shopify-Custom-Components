@@ -18,5 +18,3 @@ List of components:
 - Image and Text Collage (re-arrange the order of text or images in Shopify Customize Theme interface to get the collage effects you desired)
 - Image Unveil When Visible
 - Accordion Collection Showcase
-
-Demo link here: https://m44tzm0cp85izfl0-45081788583.shopifypreview.com
